@@ -286,6 +286,12 @@ def Host_getVMList_Ret(ret):
     """
     return [v['vmId'] for v in ret['vmList']]
 
+def Host_queryVms_Ret(ret):
+    """
+    The result contains two data structures which must be merged
+    """
+    return {'queryStamp': ret['queryStamp'], 'dataList': ret['dataList']}
+
 
 def StoragePool_getInfo_Ret(ret):
     """
@@ -352,6 +358,7 @@ command_info = {
     'Host_getVMList': {'call': Host_getVMList_Call, 'ret': Host_getVMList_Ret},
     'Host_getVMFullList': {'call': Host_getVMFullList_Call, 'ret': 'vmList'},
     'Host_getAllVmStats': {'ret': 'statsList'},
+    'Host_queryVms': {'ret': Host_queryVms_Ret},
     'Host_setupNetworks': {'ret': 'status'},
     'Image_delete': {'ret': 'uuid'},
     'Image_deleteVolumes': {'ret': 'uuid'},

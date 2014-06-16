@@ -1150,6 +1150,7 @@ exit 0
 %{python_sitearch}/%{vdsm_name}/SecureXMLRPCServer.py*
 %{python_sitearch}/%{vdsm_name}/netconfpersistence.py*
 %{python_sitearch}/%{vdsm_name}/sslutils.py*
+%{python_sitearch}/%{vdsm_name}/trackable.py*
 %{python_sitearch}/%{vdsm_name}/utils.py*
 %{python_sitearch}/%{vdsm_name}/vdscli.py*
 %{python_sitearch}/%{vdsm_name}/tool/__init__.py*

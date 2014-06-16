@@ -35,6 +35,7 @@ dist_vdsmpylib_PYTHON = \
 	qemuimg.py \
 	SecureXMLRPCServer.py \
 	sslutils.py \
+	trackable.py \
 	utils.py \
 	$(NULL)
 

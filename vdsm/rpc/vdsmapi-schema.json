@@ -3193,6 +3193,257 @@
 {'type': 'VmShortStatus',
  'data': {'vmId': 'UUID', 'status': 'VmStatus'}}
 
+
+##
+# @VmData:
+#
+# All available queryable data fields of a VM instance.
+#
+# @acpiEnable:              #optional Indicates if ACPI is enabled inside the
+#                           VM
+#
+# @appsList:                #optional A list of installed applications with
+#                           their versions
+#
+# @balloonInfo:             #optional Guest memory balloon information
+#
+# @boot:                    #optional An alias for the type of device used to
+#                           boot the VM
+#
+# @cdrom:                   #optional The path to an ISO image used in the VM's
+#                           CD-ROM device
+#
+# @clientIp:                #optional The IP address of the client connected to
+#                           the display
+#
+# @copyPasteEnable:         #optional Specify if copy and paste is enabled.
+#                           Currently relevant for @qxl devices only.
+#
+# @cpuShares:               #optional The host scheduling priority (relative to
+#                           other VMs). In case both cpuShares and nice are
+#                           present, cpuShares will be used.
+#
+# @cpuSys:                  #optional Ratio of CPU time spent by qemu on other
+#                           than guest time
+#
+# @cpuType:                 #optional The type of CPU being emulated
+#                           special values 'hostPassthrough' and 'hostModel'
+#                           are reserved for host-passthrough and host-mode cpu
+#                           mode
+#
+# @cpuUser:                 #optional Ratio of CPU time spent by the guest VM
+#
+# @custom:                  #optional A dictionary of custom, free-form
+#                           properties
+#
+# @devices:                 #optional An array of VM devices present
+#
+# @disks:                   #optional Disk bandwidth/utilization statistics
+#
+# @disksUsage:              #optional Info about mounted filesystems as
+#                           reported by the agent
+#
+# @display:                 #optional The type of display
+#
+# @displayInfo:             #optional Display and graphics device informations.
+#
+# @displayIp:               #optional The IP address to use for accessing the
+#                           VM display
+#
+# @displayPort:             #optional The port in use for unencrypted display
+#                           data
+#
+# @displaySecurePort:       #optional The port in use for encrypted display
+#                           data
+#
+# @displayType:             #optional The type of display in use
+#
+# @elapsedTime:             #optional The number of seconds that the VM has
+#                           been running
+#
+# @emulatedMachine:         #optional The machine specification being emulated
+#
+# @exitCode:                #optional The exit code f the VM process has ended
+#
+# @exitMessage:             #optional Explains the reason that the VM process
+#                           has exited
+#
+# @guestCPUCount:           #optional The number of CPU cores are visible as
+#                           online on the guest OS. This value is -1 if not
+#                           supported to report
+#
+# @guestFQDN:               #optional Fully qualified domain name of the guest
+#                           OS. (Reported by the guest agent)
+#
+# @guestIPs:                #optional A space separated string of assigned IPv4
+#                           addresses
+#
+# @keyboardLayout:          #optional The keyboard layout string (eg. 'en-us')
+#
+# @kvmEnable:               #optional Indicates if KVM hardware acceleration is
+#                           enabled
+#
+# @maxVCpus:                #optional Maximum number of CPU available for the
+#                           guest. It is the upper boundry for hot plug CPU
+#                           action
+#
+# @memGuaranteedSize:       #optional The amount of memory guaranteed to the VM
+#                           in MB
+#
+# @memSize:                 #optional The amount of memory assigned to the VM
+#                           in MB
+#
+# @memUsage:                #optional The percent of memory in use by the guest
+#
+# @memoryStats:             #optional Memory statistics as reported by the
+#                           guest agent
+#
+# @migrationProgress:       #optional Indicates the percentage progress of a
+#                           Migration, when there is one active.
+#
+# @monitorResponse:         #optional Indicates if the qemu monitor is
+#                           responsive
+#
+# @netIfaces:               #optional Network device address info as reported
+#                           by the agent
+#
+# @network:                 #optional Network bandwidth/utilization statistics
+#
+# @nicModel:                #optional A comma-separated list of NIC models in
+#                           use by the VM
+#
+# @nice:                    #optional The host scheduling priority
+#
+# @pauseCode:               #optional Indicates the reason a VM has been paused
+#
+# @pid:                     #optional The process ID of the underlying qemu
+#                           process
+#
+# @queryStamp               The current marker for the data state. This value
+#                           is used to get only the changed data between two
+#                           requests.
+#
+# @serial:                  #optional Serial number for the VM.
+#
+# @session:                 #optional The current state of user interaction
+#                           with the VM
+#
+# @smp:                     #optional The number of CPUs presented to the VM
+#
+# @smpCoresPerSocket:       #optional Indicates the number of CPU cores per
+#                           socket
+#
+# @smpThreadsPerCore:       #optional Indicates the number of CPU threads per
+#                           core
+#
+# @statsAge:                #optional The age of these statistics in seconds
+#
+# @status:                  #optional The current VM status
+#
+# @timeOffset:              #optional The time difference from host to the VM
+#                           in seconds
+#
+# @transparentHugePages:    #optional Indicates if the Transparent Huge Pages
+#                           feature is enabled for this virtual machine
+#
+# @username:                #optional The username associated with the current
+#                           session
+#
+# @vNodeRuntimeInfo:        #optional Information about the vm numa node
+#                           runtime pinning to host numa node.
+#
+# @vmId:                    The VM UUID
+#
+# @vmJobs:                  #optional Info about active vm jobs
+#
+# @vmName:                  #optional The VM name
+#
+# @vmType:                  #optional The type of VM
+#
+# @watchdogEvent:           #optional Information about the most recent
+#                           watchdog event
+#
+# Since: 4.15.0
+##
+{'type': 'VmData',
+ 'data': {
+    '*acpiEnable': 'bool', '*appsList': ['str'], '*balloonInfo': 'BalloonInfo',
+    '*boot': 'VmBootMode', '*cdrom': 'str', '*clientIp': 'str',
+    '*copyPasteEnable': 'bool', '*cpuShares': 'str', '*cpuSys': 'float',
+    '*cpuType': 'str', '*cpuUser': 'float', '*custom': 'StringMap',
+    '*devices': ['VmDevice'], '*disks': 'VmDiskStatsMap',
+    '*disksUsage': ['GuestMountInfo'], '*display': 'VmDisplayType',
+    '*displayInfo': ['VmDisplayInfo'], '*displayIp': 'str',
+    '*displayPort': 'uint', '*displaySecurePort': 'uint',
+    '*displayType': 'VmDisplayType', '*elapsedTime': 'uint',
+    '*emulatedMachine': 'str', '*exitCode': 'int', '*exitMessage': 'str',
+    '*guestCPUCount': 'int', '*guestFQDN': 'str', '*guestIPs': 'str',
+    '*keyboardLayout': 'str', '*kvmEnable': 'bool', '*maxVCpus': 'uint',
+    '*memGuaranteedSize': 'uint', '*memSize': 'uint', '*memUsage': 'uint',
+    '*memoryStats': 'GuestMemoryStats', '*migrationProgress': 'uint',
+    '*monitorResponse': 'int', '*netIfaces': ['GuestNetworkDeviceInfo'],
+    '*network': 'NetworkInterfaceStatsMap', '*nicModel': 'str', '*nice': 'int',
+    '*pauseCode': 'str', '*pid': 'uint', '*serial': 'str',
+    '*session': 'GuestSessionState', '*smp': 'uint',
+    '*smpCoresPerSocket': 'uint', '*smpThreadsPerCore': 'uint',
+    '*statsAge': 'float', '*status': 'VmStatus', '*timeOffset': 'uint',
+    '*transparentHugePages': 'bool', '*username': 'str',
+    '*vNodeRuntimeInfo': 'VmNumaNodeRuntimeInfoMap', 'vmId': 'UUID',
+    '*vmJobs': 'VmJobsMap', '*vmName': 'str', '*vmType': 'VmType',
+    '*watchdogEvent': 'WatchdogEvent'}}
+
+##
+# @VmDataResult:
+#
+# A discriminated record containing virtual machine data.
+#
+# @isExitedStats:   If this value is 'true' the structure represents
+#                   ExitedVmStats, otherwise VmData
+#
+# Since: 4.15.0
+##
+{'type': 'VmDataResult',
+ 'data': {'isExitedStats': 'bool' },
+ 'union': ['VmData', 'ExitedVmStats']}
+
+##
+# @VmQueryResult:
+#
+# The result of VM.query and Host.queryVms
+#
+# @queryStamp:  Current marker for the state of the data.
+#
+# @dataList:    List of VmData entries for the given query.
+#
+# Since: 4.15.0
+##
+{'type': 'VmQueryResult',
+ 'data': { 'queryStamp': 'string', 'dataList': ['VmDataResult']}}
+
+##
+# @Host.queryVms:
+#
+# Query all specified virtual machines for the specified fields.
+#
+# @vmIDs:           #optional A list of VM UUIDs. If not set, all VMs are used.
+#
+# @fields:          #optional A list of strings which specify the keys which
+#                   should be queried. All fields will be returned if this
+#                   value is not specified.
+#
+# @changedSince:    #optional If specified, all modifications since the given
+#                   change id are returned. Values for fields where the value
+#                   has not changed since, will not be returned.
+#
+# Returns:
+# A list of query results for all VMs in vmIDs or all VMs if vmIDs not set
+#
+# Since: 4.15.0
+##
+{'command': {'class': 'Host', 'name': 'queryVms'},
+ 'data': {'*vmIDs': ['UUID'], '*fields': ['string'], '*changedSince': 'uint'},
+ 'returns': 'VmQueryResult'}
+
 ##
 # @VmDefinition:
 #

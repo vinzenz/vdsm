@@ -38,6 +38,7 @@ from vdsm import utils
 from clientIF import clientIF
 from vdsm import netinfo
 from vdsm import constants
+from vdsm import trackable
 import storage.misc
 import storage.clusterlock
 import storage.volume
@@ -1217,6 +1218,31 @@ class Global(APIBase):
         except:
             self.log.error("failed to retrieve hardware info", exc_info=True)
             return errCode['hwInfoErr']
+
+    def queryVms(self, vmIDs=None, fields=None, exclude=(),
+                 changedSince=None):
+        hooks.before_get_all_vm_stats()
+        vms = self.getVMList()
+        statsList = []
+        stamp = None
+        for s in vms['vmList']:
+            if vmIDs and s['vmId'] not in vmIDs:
+                continue
+            vm = self._cif.vmContainer.get(s['vmId'])
+            response = vm.query(fields=fields, exclude=exclude,
+                                changedSince=changedSince)
+            statsList.append(response[0])
+            if not stamp:
+                # We only keep the first stamp, since this is when we
+                # started querying. Otherwise a caller might miss out
+                # on changes which happened afterwards
+                stamp = response[1]
+
+        # Don't send None values
+        stamp = stamp if stamp else trackable.counter().current()
+
+        statsList = hooks.after_get_all_vm_stats(statsList)
+        return {'status': doneCode, 'dataList': statsList, 'queryStamp': stamp}
 
     def getAllVmStats(self):
         """

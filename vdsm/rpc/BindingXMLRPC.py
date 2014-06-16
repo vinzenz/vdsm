@@ -458,6 +458,15 @@ class BindingXMLRPC(object):
         vm = API.VM(vmId)
         return vm.getStats()
 
+    def vmQuery(self, vmId, fields=None, changedSince=None):
+        vm = API.VM(vmId)
+        return vm.query(fields=fields, changedSince=changedSince)
+
+    def queryVms(self, vmIDs=None, fields=None, changedSince=None):
+        api = API.Global()
+        return api.queryVms(vmIDs=vmIDs, fields=fields,
+                            changedSince=changedSince)
+
     def getAllVmStats(self):
         api = API.Global()
         return api.getAllVmStats()
@@ -960,6 +969,8 @@ class BindingXMLRPC(object):
                 (self.diskGetAlignment, 'getDiskAlignment'),
                 (self.getStats, 'getVdsStats'),
                 (self.vmGetStats, 'getVmStats'),
+                (self.vmQuery, 'vmQuery'),
+                (self.queryVms, 'queryVms'),
                 (self.getAllVmStats, 'getAllVmStats'),
                 (self.vmMigrationCreate, 'migrationCreate'),
                 (self.vmDesktopLogin, 'desktopLogin'),

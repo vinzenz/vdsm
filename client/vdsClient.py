@@ -101,7 +101,8 @@ def usage(cmd, full=True):
 def printConf(conf):
     try:
         print "\n" + conf['vmId']
-        print "\tStatus = " + conf['status']
+        if 'status' in conf:
+            print "\tStatus = " + conf['status']
     except:
         pass
     for element in conf.keys():
@@ -148,9 +149,38 @@ class service:
                     printStats(response['statsList'])
             elif 'info' in response:
                 printDict(response['info'], self.pretty)
+            elif 'dataList' in response:
+                printStats(response['dataList'])
+                print '\nStamp:', response['queryStamp']
             else:
                 printDict(response['status'], self.pretty)
         sys.exit(response['status']['code'])
+
+    def vmQuery(self, args):
+        self.queryVms(('vmIds=%s' % args[0],) + args[1:])
+
+    def queryVms(self, args):
+        vmIDs = []
+        fields = []
+        exclude = []
+        changedSince = 0
+        for arg in args:
+            if '=' in arg:
+                param, value = arg.split('=', 1)
+                if param == 'vmIds':
+                    if value:
+                        vmIDs = value.split(',')
+                elif param == 'fields':
+                    if value:
+                        fields = value.split(',')
+                elif param == 'exclude':
+                    if value:
+                        exclude = value.split(',')
+                elif param == 'changedSince':
+                    if value:
+                        changedSince = int(value)
+        return self.ExecAndExit(self.s.queryVms(vmIDs, fields, exclude,
+                                                changedSince))
 
     def do_create(self, args):
         params = {}
@@ -2623,6 +2653,37 @@ if __name__ == '__main__':
                 '<vmId> <vcpuLimit>',
                 'set SLA parameter for a VM'
             )),
+        'vmQuery': (
+            serv.vmQuery, (
+                '<vmId> [parameter=value parameter=value]',
+                'Queries the Virtual Machine for the given fields. If the '
+                'fields parameter is empty all fields are requested. '
+                'Additionally the changedSince parameter can be used to only '
+                'report data which has been changed since the last request.\n'
+                'Parameters list: o=optional\n',
+                'o  fields=<fieldNames> : a comma separated list of field '
+                'names\n'
+                'o  changedSince=<queryStamp> : a \queryStamp\' marker from '
+                'the results of a previous request.'
+            )),
+        'queryVms': (
+            serv.queryVms, (
+                '[parameter=value parameter=value ...]',
+                'Queries the given virtual machines for the given fields. '
+                'If the vmIds field is empty, all vms on the host will be '
+                'queried. If the fields parameter is empty all fields are '
+                'requested. Additionally the changedSince parameter can be '
+                'used to only report data which has been changed since the '
+                'last request.\n'
+                'Parameters list: o=optional\n',
+                'o  fields=<fieldNames> : a comma separated list of field '
+                'names\n'
+                'o  fields=<fieldNames> : a comma separated list of field '
+                'names\n'
+                'o  changedSince=<queryStamp> : a \'queryStamp\' marker from '
+                'the results of a previous request.'
+            )),
+
     }
     if _glusterEnabled:
         commands.update(ge.getGlusterCmdDict(serv))

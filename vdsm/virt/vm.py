@@ -41,6 +41,7 @@ from vdsm import constants
 from vdsm import libvirtconnection
 from vdsm import netinfo
 from vdsm import qemuimg
+from vdsm import trackable
 from vdsm import utils
 from vdsm.compat import pickle
 from vdsm.config import config
@@ -416,7 +417,7 @@ class VmStatsThread(sampling.AdvancedStatsThread):
         if eInfo is None:
             return
 
-        if eInfo['vcpuLimit']:
+        if eInfo.get('vcpuLimit', None):
             value = eInfo['vcpuLimit']
             stats['vcpuUserLimit'] = value
         else:
@@ -1863,6 +1864,8 @@ class Vm(object):
         self._watchdogEvent = {}
         self.sdIds = []
         self.arch = caps.getTargetArch()
+        self._queryCacheLock = threading.Lock()
+        self._queryCache = trackable.TrackableMapping()
 
         if (self.arch not in ['ppc64', 'x86_64']):
             raise RuntimeError('Unsupported architecture: %s' % self.arch)
@@ -2752,6 +2755,27 @@ class Vm(object):
         if self._watchdogEvent:
             stats["watchdogEvent"] = self._watchdogEvent
         return stats
+
+    def query(self, fields=None, exclude=(), changedSince=None):
+        # First we need to update the query cache
+        stats = self.getStats()
+        stamp = None
+        with self._queryCacheLock:
+            self._queryCache.update(stats)
+            self._queryCache.update_filtered(self.conf,
+                                             lambda x: x.startswith('_'))
+            # Get the latest counter state, to cover the current state
+            stamp = trackable.counter().current()
+
+        # Now we build up the response
+        result = {'vmId': self._queryCache['vmId']}
+        for k in (fields or self._queryCache.keys()):
+            if k in exclude or k not in self._queryCache:
+                continue  # Ignore unknown or excluded keys
+            elif self._queryCache.changed(key=k, since=changedSince or 0):
+                result[k] = self._queryCache[k]
+        self.log.debug('QUERY DATA: %s', str(result))
+        return result, stamp
 
     def _getStatsInternal(self):
         """

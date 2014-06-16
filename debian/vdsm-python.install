@@ -16,8 +16,8 @@
 ./usr/lib/python2.7/dist-packages/vdsm/qemuimg.py
 ./usr/lib/python2.7/dist-packages/vdsm/sslutils.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/__init__.py
-./usr/lib/python2.7/dist-packages/vdsm/tool/dummybr.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/configurator.py
+./usr/lib/python2.7/dist-packages/vdsm/tool/dummybr.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/load_needed_modules.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/nwfilter.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/passwd.py
@@ -30,5 +30,6 @@
 ./usr/lib/python2.7/dist-packages/vdsm/tool/upgrade_300_networks.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/validate_ovirt_certs.py
 ./usr/lib/python2.7/dist-packages/vdsm/tool/vdsm-id.py
+./usr/lib/python2.7/dist-packages/vdsm/trackable.py
 ./usr/lib/python2.7/dist-packages/vdsm/utils.py
 ./usr/lib/python2.7/dist-packages/vdsm/vdscli.py

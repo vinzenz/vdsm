@@ -1805,8 +1805,7 @@ class Vm(object):
         """
         self._dom = None
         self.recovering = recover
-        self.conf = {'pid': '0'}
-        self.conf['_blockJobs'] = {}
+        self.conf = {'pid': '0', '_blockJobs': {}, 'clientIp': ''}
         self.conf.update(params)
         self._initLegacyConf()  # restore placeholders for BC sake
         self.cif = cif
@@ -1816,7 +1815,6 @@ class Vm(object):
             str(self.conf['vmId']) + '.recovery'
         self.user_destroy = False
         self._monitorResponse = 0
-        self.conf['clientIp'] = ''
         self.memCommitted = 0
         self._confLock = threading.Lock()
         self._jobsLock = threading.Lock()
